@@ -17,7 +17,7 @@ public class AnagramController {
         List<List<String>> anagrams = new ArrayList<List<String>>();
         List<Boolean> grouped = new ArrayList<Boolean>(Collections.nCopies(words.size(), Boolean.FALSE));
 
-        for(int i=0; i<words.size()-1; i++){
+        for(int i=0; i<words.size(); i++){
             if(grouped.get(i)==Boolean.FALSE) {
                 anagrams.add(new ArrayList<String>(Collections.singleton(words.get(i))));
                 for (int j = i + 1; j < words.size(); j++) {

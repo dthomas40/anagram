@@ -69,4 +69,43 @@ public class AnagramListTests {
         this.mvc.perform(get("/api/anagram/list?words="+words)).andExpect(status().isOk())
                 .andExpect(content().string("[[\"bad credit\",\"debit card\"],[\"cinema\",\"anemic\",\"ice man\"]]"));
     }
+
+    @Test
+    public void testExtraLoner() throws Exception {
+
+        List<String> list = new ArrayList<String>();
+        list.add("bad credit");
+        list.add("cinema");
+        list.add("anemic");
+        list.add("debit card");
+        list.add("ice man");
+        list.add("loner x");
+
+        String words = list.stream()
+                .collect(Collectors.joining(","));
+
+        System.out.println(words);
+
+
+        this.mvc.perform(get("/api/anagram/list?words="+words)).andExpect(status().isOk())
+                .andExpect(content().string("[[\"bad credit\",\"debit card\"],[\"cinema\",\"anemic\",\"ice man\"],[\"loner x\"]]"));
+    }
+
+    @Test
+    public void testAllLoners() throws Exception {
+
+        List<String> list = new ArrayList<String>();
+        list.add("loner a");
+        list.add("loner b");
+        list.add("loner c");
+
+        String words = list.stream()
+                .collect(Collectors.joining(","));
+
+        System.out.println(words);
+
+
+        this.mvc.perform(get("/api/anagram/list?words="+words)).andExpect(status().isOk())
+                .andExpect(content().string("[[\"loner a\"],[\"loner b\"],[\"loner c\"]]"));
+    }
 }
