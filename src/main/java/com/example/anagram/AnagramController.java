@@ -17,15 +17,21 @@ public class AnagramController {
         List<List<String>> anagrams = new ArrayList<List<String>>();
         List<Boolean> grouped = new ArrayList<Boolean>(Collections.nCopies(words.size(), Boolean.FALSE));
 
-        for(int i=0; i<words.size() && grouped.get(i)==false; i++){
-            anagrams.add(new ArrayList<String>(Collections.singleton(words.get(i))));
-            for(int j=i+1; j<words.size(); j++){
-                if(isAnagram(words.get(i), words.get(j))){
-                    anagrams.get(i).add(words.get(j));
-                    grouped.set(j,Boolean.TRUE);
+        for(int i=0; i<words.size()-1; i++){
+            if(grouped.get(i)==Boolean.FALSE) {
+                anagrams.add(new ArrayList<String>(Collections.singleton(words.get(i))));
+                for (int j = i + 1; j < words.size(); j++) {
+                    System.out.println(i + " : " + j);
+                    if (isAnagram(words.get(i), words.get(j))) {
+                        anagrams.get(anagrams.size()-1).add(words.get(j));
+                        grouped.set(j, Boolean.TRUE);
+                        System.out.println(grouped.toString());
+                    }
                 }
+                grouped.set(i, Boolean.TRUE);
+                System.out.println(grouped.toString());
             }
-            grouped.set(i,Boolean.TRUE);
+
         }
 
         return anagrams;
@@ -51,9 +57,9 @@ public class AnagramController {
         for(int i=0; i<a.length() ; i++){
             for(int j=0; j<b.length(); j++){
                 if(dictA.get(i)==dictB.get(j) && dictA.get(i)!=null){
-                    System.out.println(dictA.toString());
-                    System.out.println(dictB.toString());
-                    System.out.println(" -"+dictA.get(i)+" & -"+dictB.get(j));
+//                    System.out.println(dictA.toString());
+//                    System.out.println(dictB.toString());
+//                    System.out.println(" -"+dictA.get(i)+" & -"+dictB.get(j));
                     dictA.set(i,null);
                     dictB.set(j,null);
                     break;
