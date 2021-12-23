@@ -1,14 +1,35 @@
 package com.example.anagram;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
 public class AnagramController {
+
+    @GetMapping("/api/anagram/list")
+    public List<List<String>> listAnagrams(@RequestParam List<String> words){
+        System.out.println(words.toString());
+
+        List<List<String>> anagrams = new ArrayList<List<String>>();
+        List<Boolean> grouped = new ArrayList<Boolean>(Collections.nCopies(words.size(), Boolean.FALSE));
+
+        for(int i=0; i<words.size() && grouped.get(i)==false; i++){
+            anagrams.add(new ArrayList<String>(Collections.singleton(words.get(i))));
+            for(int j=i+1; j<words.size(); j++){
+                if(isAnagram(words.get(i), words.get(j))){
+                    anagrams.get(i).add(words.get(j));
+                    grouped.set(j,Boolean.TRUE);
+                }
+            }
+            grouped.set(i,Boolean.TRUE);
+        }
+
+        return anagrams;
+    }
 
     @GetMapping("/api/anagram/{a}&{b}")
     public Boolean isAnagram(@PathVariable String a, @PathVariable String b){
