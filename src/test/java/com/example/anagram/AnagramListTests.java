@@ -108,4 +108,38 @@ public class AnagramListTests {
         this.mvc.perform(get("/api/anagram/list?words="+words)).andExpect(status().isOk())
                 .andExpect(content().string("[[\"loner a\"],[\"loner b\"],[\"loner c\"]]"));
     }
+
+    @Test
+    public void testLoner() throws Exception {
+
+        List<String> list = new ArrayList<String>();
+        list.add("loner a");
+
+        String words = list.stream()
+                .collect(Collectors.joining(","));
+
+        System.out.println(words);
+
+
+        this.mvc.perform(get("/api/anagram/list?words="+words)).andExpect(status().isOk())
+                .andExpect(content().string("[[\"loner a\"]]"));
+    }
+
+    @Test
+    public void testOneGroup() throws Exception {
+
+        List<String> list = new ArrayList<String>();
+        list.add("loner a");
+        list.add("a loner");
+        list.add("loaner");
+
+        String words = list.stream()
+                .collect(Collectors.joining(","));
+
+        System.out.println(words);
+
+
+        this.mvc.perform(get("/api/anagram/list?words="+words)).andExpect(status().isOk())
+                .andExpect(content().string("[[\"loner a\",\"a loner\",\"loaner\"]]"));
+    }
 }
