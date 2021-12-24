@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class AnagramController {
@@ -40,22 +41,20 @@ public class AnagramController {
     @GetMapping("/api/anagram/{a}&{b}")
     public Boolean isAnagram(@PathVariable String a, @PathVariable String b){
 
-        List<Character> dictA = new ArrayList<Character>();
-        List<Character> dictB = new ArrayList<Character>();
+        List<Character> dictA = a.chars()
+                .map(Character::toUpperCase)
+                .filter(c -> !Character.isSpaceChar(c))
+                .mapToObj(c -> Character.valueOf((char) c))
+                .collect(Collectors.toList());
 
-        System.out.print(a);
-        a = a.replaceAll(" ","");
-        System.out.println(" -> "+a);
+        List<Character> dictB = b.chars()
+                .map(Character::toUpperCase)
+                .filter(c -> !Character.isSpaceChar(c))
+                .mapToObj(c -> Character.valueOf((char) c))
+                .collect(Collectors.toList());
 
-        System.out.print(b);
-        b = b.replaceAll(" ", "");
-        System.out.println(" -> "+b);
-
-        a.chars().forEach(c -> dictA.add(Character.valueOf((char)c)));
-        b.chars().forEach(c -> dictB.add(Character.valueOf((char)c)));
-
-        for(int i=0; i<a.length() ; i++){
-            for(int j=0; j<b.length(); j++){
+        for(int i=0; i<dictA.size() ; i++){
+            for(int j=0; j< dictB.size(); j++){
                 if(dictA.get(i)==dictB.get(j) && dictA.get(i)!=null){
 //                    System.out.println(dictA.toString());
 //                    System.out.println(dictB.toString());
@@ -67,10 +66,14 @@ public class AnagramController {
             }
         }
 
-        while(dictA.remove(null));
-        while(dictB.remove(null));
+        final List<Character> dictC = dictA.stream()
+                .filter(letter -> letter!=null)
+                .collect(Collectors.toList());
+        final List<Character> dictD = dictB.stream()
+                .filter(letter -> letter!=null)
+                .collect(Collectors.toList());
 
-        if (dictA.isEmpty() && dictB.isEmpty()){
+        if (dictC.isEmpty() && dictD.isEmpty()){
             return true;
         }
         else {
